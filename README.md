@@ -20,4 +20,8 @@ The ACP project aims to develop a coordination protocol for autonomous agents in
 
 ## Contributions
 
+
+me! Please submit a pull request or open an issue for any improvements or bug fixes.
+
 Contributions are welcome! Please submit a pull request or open an issue for any improvements or bug fixes.
+
