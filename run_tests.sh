@@ -1,0 +1,3 @@
+python3 schedule_agent/test_schedule_agent.py
+python3 match_agent/test_match_agent.py
+python3 learning_agent/test_learning_agent.py

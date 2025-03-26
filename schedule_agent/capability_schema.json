@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "AgentCapabilities",
+    "description": "Schema for agent capabilities",
+    "type": "object",
+    "properties": {
+        "capability": {
+            "type": "string",
+            "description": "Name of the capability"
+        },
+        "description": {
+            "type": "string",
+            "description": "Detailed description of the capability"
+        },
+        "version": {
+            "type": "string",
+            "description": "Version of the capability implementation"
+        },
+        "requirements": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "Dependencies or requirements for the capability"
+            }
+        }
+    },
+    "required": ["capability", "description", "version"]
+}

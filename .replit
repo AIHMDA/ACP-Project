@@ -1,0 +1,12 @@
+run = "bash run_tests.sh"
+
+[workflows]
+
+[[workflows.workflow]]
+name = "Sync with GitHub"
+mode = "sequential"
+author = 39824634
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git push origin main"
