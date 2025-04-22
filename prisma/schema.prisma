@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspaces WorkspaceUser[]
+}
+
+model Workspace {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  settings    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users     WorkspaceUser[]
+  agents    WorkspaceAgent[]
+  workflows Workflow[]
+}
+
+model WorkspaceUser {
+  id            String    @id @default(uuid())
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId   String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  role          String    @default("user")
+  createdAt     DateTime  @default(now())
+
+  @@unique([workspaceId, userId])
+}
+
+model WorkspaceAgent {
+  id           String   @id @default(uuid())
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId  String
+  name         String
+  type         String
+  capabilities String[]
+  config       Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  invocations AgentInvocation[]
+}
+
+model AgentInvocation {
+  id          String         @id @default(uuid())
+  agent       WorkspaceAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId     String
+  prompt      String
+  status      String         @default("pending")
+  result      Json?
+  error       String?
+  metadata    Json          @default("{}")
+  createdAt   DateTime      @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String
+  name        String
+  description String?
+  version     Int      @default(1)
+  nodes       Json
+  edges       Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  creatorId   String
+
+  executions WorkflowExecution[]
+}
+
+model WorkflowExecution {
+  id          String    @id @default(uuid())
+  workflow    Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowId  String
+  status      String    @default("pending")
+  input       Json?
+  output      Json?
+  error       String?
+  metadata    Json      @default("{}")
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+} 
